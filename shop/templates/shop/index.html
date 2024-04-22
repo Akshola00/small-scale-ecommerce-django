@@ -45,7 +45,7 @@
         <div class="col-md-3">
           <div class="card">
             <img
-              src="{% static '{{product.image}}' %}"
+              src="{{product.image}}"
               alt="lorem"
               class="card-img-top"
             />
@@ -56,6 +56,19 @@
           </div>
         </div>
         {% endfor %}
+      </div>
+      <div class="row">
+        <div class="col-md-3 offset-mt-4">
+            <ul class="pagination">
+                {% if prod_obj.has_previous %}
+                <li class="page-item "><a class="page-link" href="?page={{prod_obj.previous_page_number}}">previous</a></li>
+                {% endif %}
+                <li class="page-item active"><a class="page-link" href="?page={{prod_obj.number}}">current</a></li>
+                {% if prod_obj.has_next %}
+                <li class="page-item "><a class="page-link" href="?page={{prod_obj.next_page_number}}">next</a></li>
+                {% endif %}
+            </ul>
+        </div>
       </div>
     </div>
   </body>
