@@ -16,10 +16,35 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'style/style.css' %}" />
   </head>
   <body>
     <div class="container">
+      <div class="row">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Features</a>
+                </li>
+                <li id="cart" class="nav-item">
+                  <a class="nav-link" href="#">cart</a>
+                </li>
+               
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
       <div class="row">
         <div class="col-md-12">
           <form method="get" action="" class="card card-sm">
@@ -44,14 +69,12 @@
         {% for product in prod_obj %}
         <div class="col-md-3">
           <div class="card">
-            <img
-              src="{{product.image}}"
-              alt="lorem"
-              class="card-img-top"
-            />
+            <img src="{{product.image}}" alt="lorem" class="card-img-top" />
             <div class="card-body">
               <div class="card-title">{{product.title}}</div>
               <div class="card-text">${{product.price}}</div>
+              <a href="/detail/{{product.id}}" class="btn btn-warning">View</a>
+              <button id="{{product.id}}" class="btn btn-warning atc">Add to Cart</button>
             </div>
           </div>
         </div>
@@ -59,17 +82,52 @@
       </div>
       <div class="row">
         <div class="col-md-3 offset-mt-4">
-            <ul class="pagination">
-                {% if prod_obj.has_previous %}
-                <li class="page-item "><a class="page-link" href="?page={{prod_obj.previous_page_number}}">previous</a></li>
-                {% endif %}
-                <li class="page-item active"><a class="page-link" href="?page={{prod_obj.number}}">current</a></li>
-                {% if prod_obj.has_next %}
-                <li class="page-item "><a class="page-link" href="?page={{prod_obj.next_page_number}}">next</a></li>
-                {% endif %}
-            </ul>
+          <ul class="pagination">
+            {% if prod_obj.has_previous %}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{prod_obj.previous_page_number}}"
+                >previous</a
+              >
+            </li>
+            {% endif %}
+            <li class="page-item active">
+              <a class="page-link" href="?page={{prod_obj.number}}">current</a>
+            </li>
+            {% if prod_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{prod_obj.next_page_number}}"
+                >next</a
+              >
+            </li>
+            {% endif %}
+          </ul>
         </div>
       </div>
     </div>
+    <script>
+      if (localStorage.getItem('cart') == null){
+        var cart = {};
+      } else {
+        cart=JSON.parse(localStorage.getItem('cart'))
+      }
+      $(document).on('click', '.atc', function(){
+        var item_id = this.id.toString();
+        // alert('lorem ipsum dlor sit amet')
+        // alert('thie button i d is: ' + item_id)
+        // cart[item_id] = 2
+
+        if(cart[item_id]!=undefined){
+          cart[item_id] = cart[item_id] +1
+        } else {
+          cart[item_id] = 1
+        }
+        console.log(cart)
+        localStorage.setItem('cart', JSON.stringify(cart))
+        document.getElementById('cart').innerHTML = ` cart (${Object.keys(cart).length})`
+        console.log(Object.keys(cart).length)
+      })
+    </script>
   </body>
 </html>
