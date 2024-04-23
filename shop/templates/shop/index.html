@@ -16,7 +16,11 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
     <link rel="stylesheet" href="{% static 'style/style.css' %}" />
   </head>
   <body>
@@ -25,21 +29,43 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#">Home</a>
+                  <a class="nav-link active" aria-current="page" href="#"
+                    >Home</a
+                  >
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">Features</a>
                 </li>
-                <li id="cart" class="nav-item">
-                  <a class="nav-link" href="#">cart</a>
+                <li class="nav-item">
+                  <button
+                    id="cart"
+                    type="button"
+                    class="btn btn-secondary"
+
+                    data-html="true"
+
+                    data-bs-container="body"
+                    data-bs-toggle="popover"
+                    data-bs-placement="bottom"
+                    data-bs-content="<h2>lorem</h2>"
+                  >
+                    Cart (0)
+                  </button>
                 </li>
-               
               </ul>
             </div>
           </div>
@@ -71,10 +97,12 @@
           <div class="card">
             <img src="{{product.image}}" alt="lorem" class="card-img-top" />
             <div class="card-body">
-              <div class="card-title">{{product.title}}</div>
+              <div id="nm{{product.id}}" class="card-title">{{product.title}}</div>
               <div class="card-text">${{product.price}}</div>
               <a href="/detail/{{product.id}}" class="btn btn-warning">View</a>
-              <button id="{{product.id}}" class="btn btn-warning atc">Add to Cart</button>
+              <button id="{{product.id}}" class="btn btn-warning atc">
+                Add to Cart
+              </button>
             </div>
           </div>
         </div>
@@ -107,27 +135,52 @@
       </div>
     </div>
     <script>
-      if (localStorage.getItem('cart') == null){
+      // var popoverTriggerList = [].slice.call(
+      //   document.querySelectorAll('[data-bs-toggle="popover"]')
+      // );
+
+      // var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+      //   return new bootstrap.Popover(popoverTriggerEl);
+      // });
+      // document.getElementById('cart').setAttribute('data-bs-content', '<h2>lorem iposum dolor ist amet</h2>')
+
+      if (localStorage.getItem("cart") == null) {
         var cart = {};
       } else {
-        cart=JSON.parse(localStorage.getItem('cart'))
+        cart = JSON.parse(localStorage.getItem("cart"));
       }
-      $(document).on('click', '.atc', function(){
+      $(document).on("click", ".atc", function () {
         var item_id = this.id.toString();
         // alert('lorem ipsum dlor sit amet')
         // alert('thie button i d is: ' + item_id)
         // cart[item_id] = 2
 
-        if(cart[item_id]!=undefined){
-          cart[item_id] = cart[item_id] +1
+        if (cart[item_id] != undefined) {
+          cart[item_id] = cart[item_id] + 1;
         } else {
-          cart[item_id] = 1
+          cart[item_id] = 1;
         }
-        console.log(cart)
-        localStorage.setItem('cart', JSON.stringify(cart))
-        document.getElementById('cart').innerHTML = ` cart (${Object.keys(cart).length})`
-        console.log(Object.keys(cart).length)
-      })
+        console.log(cart);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        document.getElementById("cart").innerHTML = ` cart (${
+          Object.keys(cart).length
+        })`;
+        console.log(Object.keys(cart).length);
+      });
+
+      function displayCart(cart){
+        var CartString = "";
+        var cartIndex = 1
+        CartString += "<h5>ohh happy nation</h5>";
+
+        for (var x in cart){
+          CartString += cartIndex
+          CartString += document.getElementById("nm"+x).innerHTML + "qty" + cart[x]
+          cartIndex += 1
+        }
+        document.getElementById("cart").setAttribute('data-content', CartString);
+        $('[data-toggle-popover"]').popover()
+      }
     </script>
   </body>
 </html>
