@@ -26,3 +26,8 @@ def detail(request, id):
     prod_det = Products.objects.filter(id=id).first()
     context = {"details": prod_det}
     return render(request, "shop/detail.html", context)
+
+def Checkout(request):
+    if request.method == "POST":
+        
+    return render(request, 'shop/checkout.html')

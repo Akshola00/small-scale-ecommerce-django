@@ -13,16 +13,16 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-
+ 
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
       crossorigin="anonymous"
     ></script>
 
     <script
-      src="https://code.jquery.com/jquery-3.7.1.js"
-      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
 
@@ -60,13 +60,11 @@
                     id="cart"
                     type="button"
                     class="btn btn-secondary"
-
-                    data-html="true"
-
+                    
                     data-bs-container="body"
                     data-bs-toggle="popover"
                     data-bs-placement="bottom"
-                    data-bs-content="<h2>lorem</h2>"
+                    data-html="true"
                   >
                     Cart (0)
                   </button>
@@ -114,7 +112,7 @@
         {% endfor %}
       </div>
       <div class="row">
-        <div class="col-md-3 offset-mt-4">
+        <div class="col-md-3 offset-md-4">
           <ul class="pagination">
             {% if prod_obj.has_previous %}
             <li class="page-item">
@@ -140,52 +138,49 @@
       </div>
     </div>
     <script>
-      var popoverTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="popover"]')
-      );
-
-      var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl);
-      });
-      // document.getElementById('cart').setAttribute('data-bs-content', '<h2>lorem iposum dolor ist amet</h2>')
-
       if (localStorage.getItem("cart") == null) {
         var cart = {};
       } else {
-        cart = JSON.parse(localStorage.getItem("cart"));
+        var cart = JSON.parse(localStorage.getItem("cart"));
       }
+      document.getElementById("cart").innerHTML = `Cart (${Object.keys(cart).length})`;
+
+      function updatePopoverContent() {
+        var CartString = "<h5>Your Cart</h5>";
+        var cartIndex = 1;
+        for (var x in cart) {
+          CartString += `<p>${cartIndex}. ${document.getElementById("nm" + x).innerHTML} - Qty: ${cart[x][0]}</p>`;
+          cartIndex += 1;
+        }
+        CartString += "<a href='/chechout'> <button class='btn btn-warning' id='checkout'>Checkout</button></a>";
+        document.getElementById("cart").setAttribute("data-bs-content", CartString);
+        document.getElementById("cart").setAttribute("data-html", true);
+        // Reinitialize popover to reflect changes
+        var popoverTriggerEl = document.querySelector('[data-bs-toggle="popover"]');
+        var popover = bootstrap.Popover.getInstance(popoverTriggerEl); // Get the existing popover instance
+        if (popover) {
+          popover.dispose(); // Dispose it
+        }
+        new bootstrap.Popover(popoverTriggerEl); // Create a new instance
+      }
+
       $(document).on("click", ".atc", function () {
         var item_id = this.id.toString();
-        // alert('lorem ipsum dlor sit amet')
-        // alert('thie button i d is: ' + item_id)
-        // cart[item_id] = 2
-
         if (cart[item_id] != undefined) {
-          cart[item_id] = cart[item_id] + 1;
+          quantity = cart[item_id][0] + 1;
+          cart[item_id][0] = quantity;
         } else {
-          cart[item_id] = 1;
+          quantity = 1;
+          name = document.getElementById("nm" + item_id).innerHTML;
+          cart[item_id] = [quantity, name]
         }
         console.log(cart);
         localStorage.setItem("cart", JSON.stringify(cart));
-        document.getElementById("cart").innerHTML = ` cart (${
-          Object.keys(cart).length
-        })`;
-        console.log(Object.keys(cart).length);
+        document.getElementById("cart").innerHTML = `Cart (${Object.keys(cart).length})`;
+        updatePopoverContent();
       });
 
-      function displayCart(cart){
-        var CartString = "";
-        var cartIndex = 1
-        CartString += "<h5>ohh happy nation</h5>";
-
-        for (var x in cart){
-          CartString += cartIndex
-          CartString += document.getElementById("nm"+x).innerHTML + "qty" + cart[x]
-          cartIndex += 1
-        }
-        document.getElementById("cart").setAttribute('data-content', CartString);
-        $('[data-bs-toggle"]').popover()
-      }
+      updatePopoverContent();
     </script>
   </body>
 </html>
