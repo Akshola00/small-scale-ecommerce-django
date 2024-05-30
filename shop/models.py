@@ -11,3 +11,6 @@ class Products(models.Model):
 
     def __str__(self) -> str:
         return self.title
+    
+class Order(models.Model):
+    
